@@ -107,7 +107,7 @@ func queryParams(message *descriptor.Message, field *descriptor.Field, prefix st
 			desc = strings.TrimSpace(schema.Title + ". " + schema.Description)
 		}
 		param := swaggerParameterObject{
-			Name:        prefix + field.GetName(),
+			Name:        prefix + field.GetJsonName(),
 			Description: desc,
 			In:          "query",
 			Type:        schema.Type,
@@ -143,7 +143,7 @@ func queryParams(message *descriptor.Message, field *descriptor.Field, prefix st
 		return nil, fmt.Errorf("unknown message type %s", fieldType)
 	}
 	for _, nestedField := range msg.Fields {
-		p, err := queryParams(msg, nestedField, prefix+field.GetName()+".", reg, pathParams)
+		p, err := queryParams(msg, nestedField, prefix+field.GetJsonName()+".", reg, pathParams)
 		if err != nil {
 			return nil, err
 		}
@@ -251,7 +251,7 @@ func renderMessagesAsDefinition(messages messageMap, d swaggerDefinitionsObject,
 				panic(err)
 			}
 
-			schema.Properties = append(schema.Properties, keyVal{f.GetName(), fieldValue})
+			schema.Properties = append(schema.Properties, keyVal{f.GetJsonName(), fieldValue})
 		}
 		d[fullyQualifiedNameToSwaggerName(msg.FQMN(), reg)] = schema
 	}
